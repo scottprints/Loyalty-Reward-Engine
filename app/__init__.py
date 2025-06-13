@@ -7,8 +7,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
+from app.spin import spin_bp
 
-# Load environment variables from .env if present
+# Load environment variables from .env
 load_dotenv()
 
 db = SQLAlchemy()
@@ -22,6 +23,8 @@ def create_app() -> Flask:
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
+
+    app.register_blueprint(spin_bp)
 
     return app
 
