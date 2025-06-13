@@ -8,6 +8,7 @@ from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
 from app.spin import spin_bp
+from app.prize import prize_bp
 
 # Load environment variables from .env
 load_dotenv()
@@ -25,6 +26,7 @@ def create_app() -> Flask:
     jwt.init_app(app)
 
     app.register_blueprint(spin_bp)
+    app.register_blueprint(prize_bp)
 
     return app
 
