@@ -28,3 +28,4 @@ Thumbs.db
 
 # Logs
 *.log 
+scripts/cleanup_customers.py
