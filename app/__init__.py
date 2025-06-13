@@ -9,6 +9,7 @@ from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
 from app.spin import spin_bp
 from app.prize import prize_bp
+from app.auth import auth_bp
 
 # Load environment variables from .env
 load_dotenv()
@@ -27,6 +28,7 @@ def create_app() -> Flask:
 
     app.register_blueprint(spin_bp)
     app.register_blueprint(prize_bp)
+    app.register_blueprint(auth_bp)
 
     return app
 
