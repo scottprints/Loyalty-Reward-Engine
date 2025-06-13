@@ -4,4 +4,5 @@ Flask-SQLAlchemy
 Flask-Migrate
 Flask-JWT-Extended
 marshmallow
-python-dotenv 
+python-dotenv
+Flask-Admin 
