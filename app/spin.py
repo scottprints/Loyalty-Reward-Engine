@@ -1,16 +1,17 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.models import Customer
 from app.services import spin_wheel
-from app import db
+import uuid
 
-spin_bp = Blueprint('spin', __name__, url_prefix='/api')
+spin_bp = Blueprint('spin_api', __name__, url_prefix='/api')
 
 @spin_bp.route('/spin', methods=['POST'])
 @jwt_required()
 def spin():
+    from app.models import Customer
+    from app import db
     user_id = get_jwt_identity()
-    customer = Customer.query.filter_by(id=user_id).first()
+    customer = Customer.query.filter_by(id=uuid.UUID(user_id)).first()
     if not customer:
         return jsonify({"error": "Customer not found."}), 404
 

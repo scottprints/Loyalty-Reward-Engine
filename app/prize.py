@@ -1,12 +1,12 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.models import Customer, Prize, PointsTransaction
-from app import db
+import uuid
 
-prize_bp = Blueprint('prize', __name__, url_prefix='/api')
+prize_bp = Blueprint('prize_api', __name__, url_prefix='/api')
 
 @prize_bp.route('/prizes', methods=['GET'])
 def list_prizes():
+    from app.models import Prize
     prizes = Prize.query.filter_by(is_active=True).all()
     return jsonify([
         {
@@ -21,8 +21,10 @@ def list_prizes():
 @prize_bp.route('/redeem/<int:prize_id>', methods=['POST'])
 @jwt_required()
 def redeem_prize(prize_id):
+    from app.models import Customer, Prize, PointsTransaction
+    from app import db
     user_id = get_jwt_identity()
-    customer = Customer.query.filter_by(id=user_id).first()
+    customer = Customer.query.filter_by(id=uuid.UUID(user_id)).first()
     if not customer:
         return jsonify({"error": "Customer not found."}), 404
 

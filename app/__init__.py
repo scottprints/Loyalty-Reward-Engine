@@ -8,7 +8,7 @@ from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
 from app.spin import spin_bp
-from app.prize import prize_bp
+from app.prize import prize_bp as prize_api_bp
 from app.auth import auth_bp
 from app.admin import init_admin
 
@@ -28,7 +28,7 @@ def create_app() -> Flask:
     jwt.init_app(app)
 
     app.register_blueprint(spin_bp)
-    app.register_blueprint(prize_bp)
+    app.register_blueprint(prize_api_bp)
     app.register_blueprint(auth_bp)
 
     init_admin(app)

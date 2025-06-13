@@ -1,14 +1,14 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.models import Customer
-from app import db
 import uuid
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api')
 
 @auth_bp.route('/register', methods=['POST'])
 def register():
+    from app.models import Customer
+    from app import db
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
@@ -25,6 +25,7 @@ def register():
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
+    from app.models import Customer
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')

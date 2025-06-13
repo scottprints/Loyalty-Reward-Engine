@@ -1,24 +1,24 @@
 import random
-from datetime import datetime, timedelta
-from sqlalchemy.orm import Session
-from app.models import Customer, Prize, SpinResult, PointsTransaction
-from app import db
+from datetime import datetime, timedelta, timezone
 
 SPIN_LIMIT_PER_HOUR = 5
 
 
-def get_spins_in_last_hour(customer: Customer) -> int:
-    one_hour_ago = datetime.now(datetime.UTC) - timedelta(hours=1)
+def get_spins_in_last_hour(customer) -> int:
+    from app.models import SpinResult
+    one_hour_ago = datetime.now(timezone.utc) - timedelta(hours=1)
     return SpinResult.query.filter(
         SpinResult.customer_id == customer.id,
         SpinResult.spun_at >= one_hour_ago
     ).count()
 
-def weighted_random_choice(prizes: list[Prize]) -> Prize:
+def weighted_random_choice(prizes):
     weights = [p.weight for p in prizes]
     return random.choices(prizes, weights=weights, k=1)[0]
 
-def spin_wheel(customer: Customer) -> dict:
+def spin_wheel(customer) -> dict:
+    from app.models import Prize, PointsTransaction, SpinResult
+    from app import db
     if get_spins_in_last_hour(customer) >= SPIN_LIMIT_PER_HOUR:
         return {"error": "Spin limit reached. Try again later."}
 
@@ -38,6 +38,15 @@ def spin_wheel(customer: Customer) -> dict:
             customer=customer,
             amount=-prize.point_cost,
             reason=f"Spin for prize: {prize.name}"
+        ))
+
+    # Award points if this prize gives points
+    if getattr(prize, 'points_award', 0) > 0:
+        customer.points += prize.points_award
+        db.session.add(PointsTransaction(
+            customer=customer,
+            amount=prize.points_award,
+            reason=f"Prize: {prize.name}"
         ))
 
     # Log spin result

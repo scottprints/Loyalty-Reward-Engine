@@ -26,6 +26,7 @@ class Prize(db.Model):
     point_cost = db.Column(db.Integer, nullable=False, default=0)
     weight = db.Column(db.Integer, nullable=False, default=1)
     is_active = db.Column(db.Boolean, nullable=False, default=True)
+    points_award = db.Column(db.Integer, nullable=False, default=0)
 
     spin_results = relationship('SpinResult', back_populates='prize', cascade='all, delete-orphan')
 
