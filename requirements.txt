@@ -6,3 +6,4 @@ Flask-JWT-Extended
 marshmallow
 python-dotenv
 Flask-Admin 
+WTForms==2.3.3
